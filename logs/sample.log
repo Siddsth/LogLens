@@ -1,0 +1,13 @@
+
+
+```
+2024-01-15 10:23:45 ERROR /api/users 500 234ms
+2024-01-15 10:23:46 INFO /api/health 200 12ms
+2024-01-15 10:23:47 WARNING /api/orders 429 5ms
+2024-01-15 10:23:48 INFO /api/users 200 45ms
+2024-01-15 10:23:49 ERROR /api/products 503 1200ms
+2024-01-15 10:23:50 INFO /api/health 200 8ms
+2024-01-15 10:23:51 ERROR /api/users 500 340ms
+2024-01-15 10:23:52 INFO /api/orders 200 67ms
+2024-01-15 10:23:53 WARNING /api/products 404 23ms
+2024-01-15 10:23:54 INFO /api/health 200 11ms
