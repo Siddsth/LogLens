@@ -4,6 +4,7 @@ from loglens.models import LogEntrySchema
 from loglens.parser import parse_file
 import tempfile
 import os
+from loglens.detector import run_all_detectors
 
 
 app = FastAPI(
@@ -78,4 +79,20 @@ def get_summary():
         "levels": levels,
         "endpoints": endpoints,
         "avg_response_time_ms": round(total_response_time / len(entries), 2)
+    }
+
+@app.get("/anomalies")
+def get_anomalies():
+    results = run_all_detectors()
+    return results
+
+
+@app.get("/anomalies/statistical")
+def get_statistical_anomalies():
+    from loglens.detector import detect_statistical_anomalies
+    entries = get_all_entries()
+    anomalies = detect_statistical_anomalies(entries)
+    return {
+        "count": len(anomalies),
+        "anomalies": anomalies
     }
