@@ -1,3 +1,5 @@
+https://balanced-forgiveness-production-ba0e.up.railway.app/dashboard
+
 # LogLens
 
 A CLI log analyzer and anomaly detector built with Python. Parses raw log files, stores structured data in SQLite, exposes a REST API, and uses machine learning to automatically flag anomalies.
