@@ -1,11 +1,31 @@
 
 # LogLens
 
+CLI Log Analyzer + Machine Learning Anomaly Detection
+
+🎥 [Video Walkthrough](YOUR_LINK_HERE)  
+📄 [API Demo / Docs](YOUR_LINK_HERE)  
+🧪 31 Automated Tests  
+🧠 Dual Anomaly Detection (Z-score + Isolation Forest)  
+⚡ FastAPI • SQLite • scikit-learn • CLI • REST API
+
 A CLI log analyzer and anomaly detector built with Python. Parses raw log files, stores structured data in SQLite, exposes a REST API, and uses machine learning to automatically flag anomalies.
 
-**31 tests · 5 phases · 6 API endpoints · 2 ML detectors**
 
 ---
+## Why LogLens?
+
+Server logs become difficult to inspect manually as systems scale. 
+LogLens automates the process by:
+
+- Parsing raw log files into structured records
+- Persisting logs into SQLite storage
+- Exposing REST APIs for querying and analytics
+- Detecting abnormal activity automatically
+- Supporting CLI workflows for rapid inspection
+
+This project simulates a real-world log analytics pipeline used in backend monitoring systems.
+--- 
 
 ## Tech Stack
 
