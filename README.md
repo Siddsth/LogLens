@@ -1,4 +1,3 @@
-https://balanced-forgiveness-production-ba0e.up.railway.app/dashboard
 
 # LogLens
 
