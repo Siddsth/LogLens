@@ -6,6 +6,8 @@ from loglens.parser import parse_file
 import tempfile
 import os
 from loglens.detector import run_all_detectors
+from fastapi.responses import RedirectResponse
+
 
 app = FastAPI(
     title="LogLens API",
@@ -168,7 +170,7 @@ if (fileInput) {{
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to LogLens API — visit /dashboard for the UI"}
+    return RedirectResponse(url="/dashboard")
 
 
 @app.get("/logs", response_model=list[LogEntrySchema])
