@@ -16,6 +16,24 @@ app = FastAPI(
 )
 
 # ─── SHARED COMPONENTS ────────────────────────────────────────────────────────
+def seed_database():
+    """
+    Automatically loads sample.log into the database on startup
+    if the database is empty. This ensures the live demo always
+    has data to display regardless of server restarts.
+    """
+    entries = get_all_entries()
+    if len(entries) == 0:
+        sample_path = Path(__file__).parent.parent / "logs" / "sample.log"
+        if sample_path.exists():
+            from loglens.parser import parse_file
+            parsed = parse_file(str(sample_path))
+            save_entries(parsed)
+            print(f"Seeded database with {len(parsed)} sample entries.")
+
+from pathlib import Path
+seed_database()
+
 
 def navbar(active: str) -> str:
     """
@@ -28,6 +46,7 @@ def navbar(active: str) -> str:
         ("Anomalies", "/view/anomalies"),
         ("Summary",   "/view/summary"),
         ("Upload",    "/view/upload"),
+        ("About",     "/about"),
         ("API Docs",  "/docs"),
     ]
     links = ""
@@ -167,6 +186,115 @@ if (fileInput) {{
 
 
 # ─── JSON API ENDPOINTS (unchanged) ──────────────────────────────────────────
+
+@app.get("/about", response_class=HTMLResponse)
+def about():
+    content = """
+    <div class="page-title">About LogLens</div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h2>What is LogLens?</h2>
+            <p style="color:#8b949e;line-height:1.7;margin-top:8px">
+                LogLens is a CLI log analyzer and anomaly detector built in Python.
+                It parses raw server log files, stores structured data in SQLite,
+                exposes everything through a REST API, and uses machine learning
+                to automatically flag unusual entries.
+            </p>
+            <p style="color:#8b949e;line-height:1.7;margin-top:12px">
+                Built as a portfolio project to bridge backend engineering and
+                machine learning — touching file I/O, database design, REST API
+                design, and ML in one cohesive tool.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Tech Stack</h2>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+                <span class="tech-pill">Python 3.14</span>
+                <span class="tech-pill">FastAPI</span>
+                <span class="tech-pill">SQLAlchemy</span>
+                <span class="tech-pill">SQLite</span>
+                <span class="tech-pill">scikit-learn</span>
+                <span class="tech-pill">Click</span>
+                <span class="tech-pill">pytest</span>
+                <span class="tech-pill">uvicorn</span>
+                <span class="tech-pill">Render</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h2>Key Numbers</h2>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
+                <div style="text-align:center">
+                    <div style="font-size:32px;font-weight:700;color:#00b4d8;font-family:Consolas">31</div>
+                    <div style="font-size:12px;color:#8b949e;margin-top:4px">Tests passing</div>
+                </div>
+                <div style="text-align:center">
+                    <div style="font-size:32px;font-weight:700;color:#3fb950;font-family:Consolas">5</div>
+                    <div style="font-size:12px;color:#8b949e;margin-top:4px">Phases built</div>
+                </div>
+                <div style="text-align:center">
+                    <div style="font-size:32px;font-weight:700;color:#e3b341;font-family:Consolas">6</div>
+                    <div style="font-size:12px;color:#8b949e;margin-top:4px">API endpoints</div>
+                </div>
+                <div style="text-align:center">
+                    <div style="font-size:32px;font-weight:700;color:#f85149;font-family:Consolas">2</div>
+                    <div style="font-size:12px;color:#8b949e;margin-top:4px">ML detectors</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Links</h2>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px">
+                <a href="https://github.com/Siddsth/LogLens" target="_blank"
+                   style="display:flex;align-items:center;gap:10px;padding:12px;background:#0d1117;border-radius:6px;border:1px solid #30363d;color:#c9d1d9">
+                    <span style="font-size:18px">⌥</span>
+                    <div>
+                        <div style="font-weight:600;color:#fff">GitHub Repository</div>
+                        <div style="font-size:12px;color:#8b949e">github.com/Siddsth/LogLens</div>
+                    </div>
+                </a>
+                <a href="/docs" target="_blank"
+                   style="display:flex;align-items:center;gap:10px;padding:12px;background:#0d1117;border-radius:6px;border:1px solid #30363d;color:#c9d1d9">
+                    <span style="font-size:18px">📄</span>
+                    <div>
+                        <div style="font-weight:600;color:#fff">API Documentation</div>
+                        <div style="font-size:12px;color:#8b949e">Interactive Swagger UI</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:0">
+        <h2>Deployment note</h2>
+        <p style="color:#8b949e;line-height:1.7;margin-top:8px">
+            This app is hosted on <strong style="color:#c9d1d9">Render's free tier</strong>.
+            After 15 minutes of inactivity the server spins down to save resources.
+            The first visit after a period of inactivity may take up to
+            <strong style="color:#c9d1d9">30 seconds</strong> to load while the server wakes up —
+            this is expected behavior and not a bug. Subsequent requests are instant.
+            The database is automatically seeded with sample log data on every fresh start.
+        </p>
+    </div>
+
+    <style>
+        .tech-pill {
+            padding: 4px 12px;
+            background: #00b4d820;
+            border: 1px solid #00b4d840;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #00b4d8;
+            font-family: Consolas, monospace;
+        }
+    </style>"""
+
+    return base_page("About", "About", content)
 
 @app.get("/")
 def root():
